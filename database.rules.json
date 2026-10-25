@@ -1,0 +1,25 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "boat": {
+      ".read":  "auth != null && auth.uid === 'XNOXlrLpkyYus44RLF0LhpHB3gL2'",
+      ".write": "auth != null && auth.uid === 'XNOXlrLpkyYus44RLF0LhpHB3gL2'",
+      "control": {
+        "started":      { ".validate": "newData.isBoolean()" },
+        "command":      { ".validate": "newData.isString() && (newData.val() === 'forward' || newData.val() === 'left' || newData.val() === 'right' || newData.val() === 'stop')" },
+        "conveyor":     { ".validate": "newData.isBoolean()" },
+        "webHeartbeat": { ".validate": "newData.isNumber()" }
+      },
+      "sensors": {
+        "$sensor": { ".validate": "newData.isNumber()" }
+      },
+      "status": {
+        "lastSeen": { ".validate": "newData.isNumber()" },
+        "relays": {
+          "$relay": { ".validate": "newData.isBoolean()" }
+        }
+      }
+    }
+  }
+}

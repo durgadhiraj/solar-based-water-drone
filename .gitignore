@@ -1,0 +1,14 @@
+# Private settings: Wi-Fi + ESP32 Firebase login (template: secrets.example.h)
+solar_boat_esp32/secrets.h
+
+# Local tooling
+.venv/
+.claude/
+__pycache__/
+*.pyc
+
+# Arduino / OS clutter
+build/
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b4f8a">
+<title>Solar Based Water Boat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ------------------------------------------------------------------
+     Design tokens: light, high-contrast theme for outdoor use
+     ------------------------------------------------------------------ */
+  :root {
+    --bg: #eef2f6;
+    --surface: #ffffff;
+    --ink: #0f172a;
+    --ink-2: #334155;
+    --muted: #5b6878;
+    --line: #d5dce5;
+    --brand: #0b4f8a;
+    --brand-2: #0e6bb8;
+    --go: #15803d;
+    --stop: #c81e1e;
+    --stop-dark: #a51717;
+    --stop-soft: #fdecec;
+    --active: #fbbf24;
+    --pad: #1e293b;
+    --pad-2: #334155;
+    --off-bg: #e3e8ee;
+    --off-ink: #6b7785;
+    --radius: 16px;
+    --radius-sm: 12px;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .06), 0 4px 14px rgba(15, 23, 42, .06);
+    --shadow-btn: 0 1px 0 rgba(255, 255, 255, .18) inset, 0 4px 12px rgba(15, 23, 42, .18);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 500 16px/1.45 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font: inherit; color: inherit; }
+  button:focus-visible, input:focus-visible { outline: 3px solid var(--brand-2); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+  svg { display: block; }
+
+  /* ------------------------------------------------------------------
+     Header
+     ------------------------------------------------------------------ */
+  .sticky { position: sticky; top: 0; z-index: 10; }
+  .topbar {
+    background: linear-gradient(135deg, #0b4f8a 0%, #0a3d6b 100%);
+    color: #fff;
+    padding: 12px 16px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    box-shadow: 0 2px 10px rgba(15, 23, 42, .25);
+  }
+  .topbar-inner { max-width: 600px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .logo {
+    flex: none; width: 38px; height: 38px; border-radius: 11px;
+    background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .25);
+    display: grid; place-items: center;
+  }
+  .brand h1 { margin: 0; font-size: 1rem; font-weight: 800; letter-spacing: -.01em; line-height: 1.2; }
+  .brand p { margin: 1px 0 0; font-size: .75rem; font-weight: 500; color: rgba(255, 255, 255, .78); }
+  .conn {
+    flex: none; display: flex; align-items: center; gap: 7px;
+    padding: 6px 11px 6px 9px; border-radius: 999px;
+    background: #fff; color: var(--ink); font-size: .78rem; font-weight: 700; white-space: nowrap;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .dot.grey  { background: #94a3b8; }
+  .dot.green { background: #16a34a; box-shadow: 0 0 0 3px rgba(22, 163, 74, .22); }
+  .dot.red   { background: #dc2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, .22); }
+
+  /* ------------------------------------------------------------------
+     Obstacle banner
+     ------------------------------------------------------------------ */
+  .banner {
+    background: var(--stop); color: #fff;
+    padding: 11px 16px; font-weight: 700; font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(200, 30, 30, .3);
+  }
+  .banner-inner { max-width: 600px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-start; }
+  .banner-inner svg { flex: none; margin-top: 2px; }
+  .banner .rows div + div { margin-top: 2px; }
+  .banner small { display: block; font-weight: 500; font-size: .8rem; opacity: .9; margin-top: 2px; }
+
+  main { max-width: 600px; margin: 0 auto; padding: 16px; padding-bottom: max(28px, env(safe-area-inset-bottom)); }
+
+  /* ------------------------------------------------------------------
+     Cards
+     ------------------------------------------------------------------ */
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow);
+  }
+  .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  .card-head h2 {
+    margin: 0; font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2);
+  }
+  .card-head .note { font-size: .78rem; font-weight: 600; color: var(--muted); text-align: right; }
+  .notice { background: #fff8e1; border-color: #f2d27a; }
+  .notice strong { display: block; margin-bottom: 4px; }
+  .notice p { margin: 0; color: var(--ink-2); }
+  .notice code { background: #fff; padding: 1px 6px; border-radius: 6px; border: 1px solid #e3cf8f; font-size: .88em; }
+
+  /* ------------------------------------------------------------------
+     Login
+     ------------------------------------------------------------------ */
+  .login { max-width: 420px; margin: 24px auto 14px; padding: 24px 20px; }
+  .login-head { text-align: center; margin-bottom: 18px; }
+  .login-head .logo { width: 52px; height: 52px; border-radius: 15px; margin: 0 auto 12px; background: var(--brand); border: 0; }
+  .login-head h2 { margin: 0; font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; }
+  .login-head p { margin: 4px 0 0; color: var(--muted); font-size: .92rem; }
+  .login label { display: block; font-weight: 700; font-size: .85rem; margin: 14px 0 6px; color: var(--ink-2); }
+  .login input {
+    width: 100%; font: inherit; font-weight: 500; padding: 13px 14px; border-radius: var(--radius-sm);
+    border: 1.5px solid #b9c3cf; background: #fff; color: var(--ink);
+  }
+  .login input:focus { border-color: var(--brand-2); outline: none; box-shadow: 0 0 0 4px rgba(14, 107, 184, .18); }
+  .login button {
+    width: 100%; margin-top: 20px; min-height: 52px; border-radius: var(--radius-sm); border: 0;
+    background: var(--brand); color: #fff; font-weight: 800; letter-spacing: .02em; cursor: pointer;
+    box-shadow: var(--shadow-btn);
+  }
+  .login button:disabled { background: var(--off-bg); color: var(--off-ink); box-shadow: none; cursor: not-allowed; }
+  .error { color: var(--stop); font-weight: 700; font-size: .9rem; margin: 12px 0 0; min-height: 1.2em; text-align: center; }
+
+  /* ------------------------------------------------------------------
+     Start / Stop system
+     ------------------------------------------------------------------ */
+  .big {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    width: 100%; min-height: 92px; padding: 14px 18px; border: 0; border-radius: var(--radius);
+    font-size: 1.45rem; font-weight: 800; letter-spacing: .04em;
+    cursor: pointer; touch-action: manipulation; box-shadow: var(--shadow-btn);
+    transition: background-color .15s, transform .08s;
+  }
+  .big:active:not(:disabled) { transform: scale(.985); }
+  .big .btn-text { display: flex; flex-direction: column; align-items: flex-start; }
+  .big .sub { font-size: .8rem; font-weight: 600; letter-spacing: .02em; opacity: .9; }
+  .big .sub:empty { display: none; }
+  .start-btn.is-start { background: var(--go); color: #fff; }
+  .start-btn.is-stop  { background: var(--stop); color: #fff; }
+  .big:disabled { background: var(--off-bg) !important; color: var(--off-ink) !important; box-shadow: none; cursor: not-allowed; }
+  .hint { margin: 10px 2px 0; font-weight: 600; color: var(--muted); font-size: .88rem; }
+  .hint:empty { display: none; }
+  .hint.warn { color: var(--stop); }
+
+  /* ------------------------------------------------------------------
+     Steering D-pad
+     ------------------------------------------------------------------ */
+  .dpad {
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: ". up ." "left mid right" ". down .";
+  }
+  .dir {
+    min-height: 86px; border-radius: var(--radius-sm); border: 0;
+    background: var(--pad); color: #fff; font-weight: 800; font-size: .8rem; letter-spacing: .06em;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+    cursor: pointer; touch-action: manipulation; padding: 8px 4px; box-shadow: var(--shadow-btn);
+    transition: background-color .15s, transform .08s;
+  }
+  .dir:active:not(:disabled) { transform: scale(.97); }
+  .dir .sub { font-size: .68rem; font-weight: 600; letter-spacing: .02em; }
+  .dir .sub:empty { display: none; }
+  .dir.up { grid-area: up; } .dir.left { grid-area: left; } .dir.right { grid-area: right; } .dir.down { grid-area: down; }
+  .dir.down { background: var(--pad-2); }
+  .dir:disabled { background: var(--off-bg); color: var(--off-ink); box-shadow: none; cursor: not-allowed; }
+  .dir.active { background: var(--active) !important; color: var(--ink) !important; box-shadow: 0 0 0 3px var(--ink) inset, var(--shadow-btn); }
+  .dir.pending, .toggle.pending { animation: pulse 1s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { outline: 3px solid transparent; outline-offset: 2px; } 50% { outline: 3px solid var(--active); outline-offset: 2px; } }
+  .mid {
+    grid-area: mid; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    border: 1.5px dashed #b9c3cf; border-radius: var(--radius-sm); background: #f7f9fb; padding: 6px;
+  }
+  .mid span { font-size: .66rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .mid b { font-size: .95rem; font-weight: 800; margin-top: 2px; line-height: 1.15; }
+
+  /* ------------------------------------------------------------------
+     Conveyor toggle
+     ------------------------------------------------------------------ */
+  .toggle {
+    width: 100%; min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px; border-radius: var(--radius-sm); border: 1.5px solid #b9c3cf; background: #f7f9fb;
+    cursor: pointer; touch-action: manipulation; text-align: left; transition: background-color .15s, border-color .15s;
+  }
+  .toggle-left { display: flex; align-items: center; gap: 12px; }
+  .toggle-icon { width: 42px; height: 42px; border-radius: 11px; background: var(--pad); color: #fff; display: grid; place-items: center; flex: none; }
+  .toggle-title { display: block; font-weight: 800; font-size: 1.05rem; }
+  .toggle .sub { display: block; font-size: .8rem; font-weight: 600; color: var(--muted); min-height: 1.15em; }
+  .chip {
+    flex: none; min-width: 64px; text-align: center; padding: 8px 12px; border-radius: 999px;
+    font-weight: 800; font-size: .9rem; letter-spacing: .06em; background: var(--off-bg); color: var(--ink-2);
+  }
+  .toggle.on { background: #fff8e1; border-color: #e0a800; }
+  .toggle.on .chip { background: var(--active); color: var(--ink); }
+  .toggle.on .toggle-icon { background: #b45309; }
+  .toggle:disabled { cursor: not-allowed; background: var(--off-bg); border-color: var(--off-bg); }
+  .toggle:disabled .toggle-title, .toggle:disabled .chip { color: var(--off-ink); }
+  .toggle:disabled .toggle-icon { background: #b3bdc8; }
+
+  /* ------------------------------------------------------------------
+     Sensors (top view of the boat)
+     ------------------------------------------------------------------ */
+  .boatgrid {
+    display: grid; gap: 10px;
+    grid-template-columns: 1fr 52px 1fr;
+    grid-template-areas: "fl hull fr" "bl hull br";
+  }
+  .hull { grid-area: hull; display: flex; align-items: stretch; justify-content: center; }
+  .hull svg { width: 52px; height: 100%; }
+  .sensor {
+    background: #f7f9fb; border: 1.5px solid var(--line); border-radius: var(--radius-sm);
+    padding: 12px 10px; text-align: center; min-height: 108px;
+    display: flex; flex-direction: column; justify-content: center;
+    transition: background-color .2s, border-color .2s;
+  }
+  .sensor .name { font-weight: 700; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .sensor .cm { font-weight: 800; font-size: 1.75rem; line-height: 1.1; margin-top: 6px; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .sensor .m  { font-weight: 600; font-size: .88rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .sensor.alert { background: var(--stop); border-color: var(--stop-dark); color: #fff; }
+  .sensor.alert .name, .sensor.alert .m { color: rgba(255, 255, 255, .92); }
+  .sensor.stale { border-style: dashed; }
+  .sensor.stale .cm, .sensor.stale .m, .sensor.stale .name { color: #9aa5b1; }
+  .sensor.stale.alert { background: var(--stop-soft); border-color: #f0b4b4; }
+  #s-frontLeft { grid-area: fl; } #s-frontRight { grid-area: fr; } #s-backLeft { grid-area: bl; } #s-backRight { grid-area: br; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 12px 0 0; color: var(--muted); font-size: .78rem; font-weight: 600; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+  /* ------------------------------------------------------------------
+     Footer + toast
+     ------------------------------------------------------------------ */
+  .foot {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    margin-top: 6px; padding: 4px 2px; font-size: .82rem; color: var(--muted); font-weight: 600;
+  }
+  .foot .who { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .foot button {
+    flex: none; background: var(--surface); border: 1.5px solid #b9c3cf; border-radius: 10px;
+    padding: 8px 14px; font-weight: 700; color: var(--ink-2); cursor: pointer;
+  }
+  #toast {
+    position: fixed; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+    max-width: calc(100% - 32px); background: var(--ink); color: #fff; font-weight: 600; font-size: .92rem;
+    padding: 12px 16px; border-radius: 12px; z-index: 20; display: none; box-shadow: 0 8px 24px rgba(15, 23, 42, .3);
+  }
+  @media (min-width: 480px) {
+    .brand h1 { font-size: 1.15rem; }
+    .conn { font-size: .85rem; }
+    .dir { font-size: .88rem; min-height: 96px; }
+  }
+  @media (max-width: 359px) {
+    .brand p { display: none; }
+    .big { font-size: 1.25rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="sticky">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="3.2"/><path d="M12 1.5v1.6M5.6 4.1l1.1 1.1M18.4 4.1l-1.1 1.1M3.5 10.5h1.6M18.9 10.5h1.6"/>
+            <path d="M2 17c2 0 2-1.4 4-1.4s2 1.4 4 1.4 2-1.4 4-1.4 2 1.4 4 1.4 2-1.4 4-1.4"/><path d="M2 21c2 0 2-1.4 4-1.4s2 1.4 4 1.4 2-1.4 4-1.4 2 1.4 4 1.4 2-1.4 4-1.4"/>
+          </svg>
+        </span>
+        <div>
+          <h1>Solar Based Water Boat</h1>
+          <p>Remote control console</p>
+        </div>
+      </div>
+      <div class="conn" aria-live="polite"><span id="dot" class="dot grey"></span><span id="connText">ESP32 Checking...</span></div>
+    </div>
+  </header>
+  <div id="banner" class="banner" role="alert" hidden></div>
+</div>
+
+<main>
+  <section id="setupNotice" class="card notice" hidden>
+    <strong>Firebase is not configured yet</strong>
+    <p>Open <code>index.html</code> in a text editor and fill in <code>firebaseConfig</code>
+      (apiKey, authDomain, databaseURL, projectId). See README.md, step 2.</p>
+  </section>
+
+  <section id="sdkError" class="card notice" hidden></section>
+
+  <section id="loginCard" class="card login">
+    <div class="login-head">
+      <span class="logo" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="3.2"/><path d="M12 1.5v1.6M5.6 4.1l1.1 1.1M18.4 4.1l-1.1 1.1M3.5 10.5h1.6M18.9 10.5h1.6"/>
+          <path d="M2 17c2 0 2-1.4 4-1.4s2 1.4 4 1.4 2-1.4 4-1.4 2 1.4 4 1.4 2-1.4 4-1.4"/><path d="M2 21c2 0 2-1.4 4-1.4s2 1.4 4 1.4 2-1.4 4-1.4 2 1.4 4 1.4 2-1.4 4-1.4"/>
+        </svg>
+      </span>
+      <h2>Sign in</h2>
+      <p>Use your boat operator account</p>
+    </div>
+    <form id="loginForm" autocomplete="on">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" placeholder="name@example.com" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="Password" required>
+      <button id="loginBtn" type="submit">LOG IN</button>
+      <p id="loginError" class="error" role="alert"></p>
+    </form>
+  </section>
+
+  <section id="app" hidden>
+    <section class="card">
+      <div class="card-head"><h2>System</h2><span class="note">Arm / emergency stop</span></div>
+      <button id="startBtn" class="big start-btn is-start" disabled>
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+          <path d="M12 3v8"/><path d="M6.3 6.6a8 8 0 1 0 11.4 0"/>
+        </svg>
+        <span class="btn-text"><span id="startLabel">START</span><span id="startSub" class="sub"></span></span>
+      </button>
+      <p id="startHint" class="hint"></p>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Steering</h2><span class="note">Tap once &middot; holds until changed</span></div>
+      <div class="dpad" id="dpad">
+        <button class="dir up" data-cmd="forward" disabled>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 15l7-7 7 7"/></svg>
+          FORWARD<span class="sub"></span></button>
+        <button class="dir left" data-cmd="left" disabled>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          LEFT<span class="sub"></span></button>
+        <div class="mid" id="current"><span>Current</span><b>SYSTEM OFF</b></div>
+        <button class="dir right" data-cmd="right" disabled>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+          RIGHT<span class="sub"></span></button>
+        <button class="dir down" data-cmd="stop" disabled>
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5" fill="currentColor"/></svg>
+          BACK / BRAKE<span class="sub"></span></button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Conveyor</h2><span class="note">Works without START</span></div>
+      <button id="conveyorBtn" class="toggle conveyor-btn" disabled>
+        <span class="toggle-left">
+          <span class="toggle-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="9" width="20" height="7" rx="3.5"/><circle cx="6" cy="12.5" r="1.2"/><circle cx="12" cy="12.5" r="1.2"/><circle cx="18" cy="12.5" r="1.2"/><path d="M5 5.5h4M11 5.5h4"/>
+            </svg>
+          </span>
+          <span><span class="toggle-title">Conveyor motor</span><span id="conveyorSub" class="sub"></span></span>
+        </span>
+        <span id="conveyorLabel" class="chip">OFF</span>
+      </button>
+      <p id="conveyorHint" class="hint"></p>
+    </section>
+
+    <section class="card sensors">
+      <div class="card-head"><h2>Obstacle sensors</h2><span class="note">Top view</span></div>
+      <div class="boatgrid">
+        <div class="sensor" id="s-frontLeft"><div class="name">Front left</div><div class="cm">--</div><div class="m">&nbsp;</div></div>
+        <div class="hull" aria-hidden="true">
+          <svg viewBox="0 0 52 200" preserveAspectRatio="none">
+            <path d="M26 4 C44 30 46 60 46 90 L46 190 Q46 194 42 194 L10 194 Q6 194 6 190 L6 90 C6 60 8 30 26 4 Z" fill="#dce7f3" stroke="#0b4f8a" stroke-width="2"/>
+            <text x="26" y="62" text-anchor="middle" font-size="9" font-weight="800" letter-spacing="1" fill="#0b4f8a" font-family="Inter, system-ui, sans-serif">BOW</text>
+            <text x="26" y="182" text-anchor="middle" font-size="8" font-weight="800" letter-spacing="1" fill="#0b4f8a" font-family="Inter, system-ui, sans-serif">STERN</text>
+          </svg>
+        </div>
+        <div class="sensor" id="s-frontRight"><div class="name">Front right</div><div class="cm">--</div><div class="m">&nbsp;</div></div>
+        <div class="sensor" id="s-backLeft"><div class="name">Back left</div><div class="cm">--</div><div class="m">&nbsp;</div></div>
+        <div class="sensor" id="s-backRight"><div class="name">Back right</div><div class="cm">--</div><div class="m">&nbsp;</div></div>
+      </div>
+      <p class="legend">
+        <span><i style="background:var(--stop)"></i>Obstacle at 2 m or less</span>
+        <span><i style="background:#f7f9fb;border:1.5px solid var(--line)"></i>Clear</span>
+        <span>"--" no reading</span>
+      </p>
+    </section>
+
+    <div class="foot">
+      <span class="who">Signed in as <span id="userEmail"></span></span>
+      <button id="logoutBtn" type="button">Log out</button>
+    </div>
+  </section>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script type="module">
+// ============================================================================
+//  CONFIGURATION: paste your Firebase web app config here (README step 2)
+// ============================================================================
+const firebaseConfig = {
+  apiKey:      "AIzaSyCs4DNdxRw4tvyjWTZWiihyrOCHdoMY0-k",
+  authDomain:  "solar-water-boat.firebaseapp.com",
+  databaseURL: "https://solar-water-boat-default-rtdb.firebaseio.com",
+  projectId:   "solar-water-boat",
+};
+
+// Must match the firmware and README.
+const SETTINGS = {
+  OBSTACLE_CM: 200,          // banner + red card at 2 m or less
+  ONLINE_TIMEOUT_MS: 6000,   // ESP32 is online if status/lastSeen is newer than this
+  HEARTBEAT_MS: 1000,        // control/webHeartbeat increment period
+  CONFIRM_WARN_MS: 5000,     // warn if the ESP32 has not confirmed a command after this
+  TICK_MS: 500,              // how often online/offline is re-evaluated
+};
+const PATHS = {
+  control:   "boat/control",
+  sensors:   "boat/sensors",
+  status:    "boat/status",
+  heartbeat: "boat/control/webHeartbeat",
+};
+const SDK_VERSION = "12.19.0";
+const SDK = `https://www.gstatic.com/firebasejs/${SDK_VERSION}/`;
+
+const SENSORS = [
+  { key: "frontLeft",  label: "FRONT-LEFT"  },
+  { key: "frontRight", label: "FRONT-RIGHT" },
+  { key: "backLeft",   label: "BACK-LEFT"   },
+  { key: "backRight",  label: "BACK-RIGHT"  },
+];
+const WARN_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3L2 20h20L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>';
+const CMD_NAMES = { forward: "FORWARD", left: "LEFT", right: "RIGHT", stop: "BRAKE" };
+
+// ============================================================================
+//  State
+// ============================================================================
+const S = {
+  configured: false,
+  user: null,
+  fbConnected: false,     // this phone <-> Firebase
+  offset: 0,              // .info/serverTimeOffset
+  control: null,          // what we asked for (boat/control)
+  relays: null,           // what the ESP32 reports (boat/status/relays)
+  lastSeen: null,
+  statusLoaded: false,
+  sensors: null,
+  online: null,           // null = checking, true/false
+  pendingSince: { drive: 0, conveyor: 0 },
+};
+let fb = null;            // { db, auth, ref, update, set, increment, ... }
+let listeners = [];
+let stopWriteInFlight = false;
+let wakeLock = null;
+
+const $ = (id) => document.getElementById(id);
+const el = {
+  dot: $("dot"), connText: $("connText"), banner: $("banner"),
+  setupNotice: $("setupNotice"), sdkError: $("sdkError"),
+  loginCard: $("loginCard"), loginForm: $("loginForm"), loginBtn: $("loginBtn"), loginError: $("loginError"),
+  email: $("email"), password: $("password"),
+  app: $("app"), startBtn: $("startBtn"), startLabel: $("startLabel"), startSub: $("startSub"), startHint: $("startHint"),
+  dirs: [...document.querySelectorAll(".dir")], current: $("current"),
+  conveyorBtn: $("conveyorBtn"), conveyorLabel: $("conveyorLabel"), conveyorSub: $("conveyorSub"), conveyorHint: $("conveyorHint"),
+  userEmail: $("userEmail"), logoutBtn: $("logoutBtn"), toast: $("toast"),
+};
+
+// ============================================================================
+//  Helpers
+// ============================================================================
+let toastTimer = null;
+function toast(msg) {
+  el.toast.textContent = msg;
+  el.toast.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.toast.style.display = "none"; }, 3500);
+}
+function buzz() {
+  try {
+    const tapped = !navigator.userActivation || navigator.userActivation.hasBeenActive;
+    if (tapped && navigator.vibrate) navigator.vibrate(30);
+  } catch (_) {}
+}
+
+function isConfigured(cfg) {
+  return Object.values(cfg).every((v) => typeof v === "string" && v && !v.includes("YOUR_"));
+}
+
+function validCm(v) { return typeof v === "number" && isFinite(v) && v > 0; }
+
+function expectedRelays(c) {
+  const started = !!(c && c.started), cmd = c && c.command;
+  return {
+    left:  started && (cmd === "forward" || cmd === "right"),
+    right: started && (cmd === "forward" || cmd === "left"),
+    conveyor: !!(c && c.conveyor),
+  };
+}
+function actualCommand(r) {
+  if (r.left && r.right) return "forward";
+  if (r.right) return "left";
+  if (r.left) return "right";
+  return "stop";
+}
+function relaysOf(r) {
+  return { left: !!(r && r.left), right: !!(r && r.right), conveyor: !!(r && r.conveyor) };
+}
+
+function computeOnline() {
+  if (!S.user || !S.statusLoaded) return null;
+  if (typeof S.lastSeen !== "number") return false;
+  const age = Date.now() + S.offset - S.lastSeen;
+  return age < SETTINGS.ONLINE_TIMEOUT_MS;
+}
+
+// ============================================================================
+//  Firebase writes
+// ============================================================================
+async function writeControl(patch, what) {
+  if (!fb || !S.user) return;
+  try {
+    await fb.update(fb.ref(fb.db, PATHS.control), patch);
+  } catch (e) {
+    toast(`Could not send ${what}: ${e.code || e.message}`);
+  }
+}
+
+function writeStop(reason) {
+  if (!fb || !S.user || stopWriteInFlight) return;
+  stopWriteInFlight = true;
+  console.info("[boat] writing STOP:", reason);
+  fb.update(fb.ref(fb.db, PATHS.control), { started: false, command: "stop", conveyor: false })
+    .catch((e) => toast(`Could not send STOP: ${e.code || e.message}`))
+    .finally(() => { stopWriteInFlight = false; });
+}
+
+function sendHeartbeat() {
+  if (!fb || !S.user || !S.fbConnected) return;   // do not queue beats while this phone is offline
+  fb.set(fb.ref(fb.db, PATHS.heartbeat), fb.increment(1)).catch(() => {});
+}
+
+// ============================================================================
+//  Rendering
+// ============================================================================
+function render() {
+  // ---- header status ----
+  if (S.online === true) { el.dot.className = "dot green"; el.connText.textContent = "ESP32 Online"; }
+  else if (S.online === false) { el.dot.className = "dot red"; el.connText.textContent = "ESP32 Offline"; }
+  else { el.dot.className = "dot grey"; el.connText.textContent = "ESP32 Checking..."; }
+
+  // ---- which card is visible ----
+  el.loginCard.hidden = !!S.user;
+  el.app.hidden = !S.user;
+  if (!S.user) { el.banner.hidden = true; return; }
+
+  const online = S.online === true;
+  const c = S.control || { started: false, command: "stop", conveyor: false };
+  const exp = expectedRelays(c);
+  const act = relaysOf(S.relays);
+  const now = Date.now();
+
+  const drivePending = online && (exp.left !== act.left || exp.right !== act.right);
+  const convPending  = online && (exp.conveyor !== act.conveyor);
+  S.pendingSince.drive    = drivePending ? (S.pendingSince.drive || now) : 0;
+  S.pendingSince.conveyor = convPending  ? (S.pendingSince.conveyor || now) : 0;
+  const driveSlow = drivePending && now - S.pendingSince.drive > SETTINGS.CONFIRM_WARN_MS;
+  const convSlow  = convPending  && now - S.pendingSince.conveyor > SETTINGS.CONFIRM_WARN_MS;
+
+  // ---- START / STOP SYSTEM ----
+  if (c.started) {
+    el.startBtn.className = "big start-btn is-stop";
+    el.startLabel.textContent = "STOP SYSTEM";
+    el.startBtn.disabled = false;                 // emergency stop always allowed
+  } else {
+    el.startBtn.className = "big start-btn is-start";
+    el.startLabel.textContent = "START";
+    el.startBtn.disabled = !online;
+  }
+  el.startSub.textContent = drivePending ? "Sending..." : "";
+  if (!online) {
+    el.startHint.className = "hint warn";
+    el.startHint.textContent = S.online === null ? "Checking boat connection..."
+      : (S.fbConnected ? "Boat is offline. Controls are locked." : "This phone has no connection to Firebase.");
+  } else if (driveSlow) {
+    el.startHint.className = "hint warn";
+    el.startHint.textContent = "Boat has not confirmed the command yet...";
+  } else {
+    el.startHint.className = "hint";
+    el.startHint.textContent = c.started ? "System armed. Tap a direction. BRAKE stops both motors."
+                                         : "Motors are locked until you press START.";
+  }
+
+  // ---- D-pad ----
+  const actualCmd = actualCommand(act);
+  const dirEnabled = online && !!c.started;
+  for (const b of el.dirs) {
+    const cmd = b.dataset.cmd;
+    b.disabled = !dirEnabled;
+    const isActive = online && c.started && cmd === actualCmd;
+    const isPending = drivePending && c.started && cmd === c.command && cmd !== actualCmd;
+    b.classList.toggle("active", isActive);
+    b.classList.toggle("pending", isPending);
+    b.querySelector(".sub").textContent = isPending ? "Sending..." : "";
+  }
+  let cur;
+  if (!online) cur = "--";
+  else if (c.started) cur = CMD_NAMES[actualCmd];
+  else cur = (act.left || act.right) ? "STOPPING..." : "SYSTEM OFF";
+  el.current.innerHTML = `<span>Current</span><b>${cur}</b>`;
+
+  // ---- Conveyor ----
+  el.conveyorBtn.disabled = !online;
+  el.conveyorBtn.classList.toggle("on", online && act.conveyor);
+  el.conveyorBtn.classList.toggle("pending", convPending);
+  el.conveyorLabel.textContent = online ? (act.conveyor ? "ON" : "OFF") : "--";
+  el.conveyorSub.textContent = convPending ? "Sending..." : (online ? "Tap to switch " + (act.conveyor ? "OFF" : "ON") : "");
+  el.conveyorHint.className = convSlow ? "hint warn" : "hint";
+  el.conveyorHint.textContent = convSlow ? "Boat has not confirmed the conveyor command yet..." : "";
+
+  // ---- Sensors + banner ----
+  const alerts = [];
+  for (const s of SENSORS) {
+    const card = $("s-" + s.key);
+    const v = S.sensors ? S.sensors[s.key] : undefined;
+    const valid = validCm(v);
+    const close = valid && v <= SETTINGS.OBSTACLE_CM;
+    card.classList.toggle("alert", close);
+    card.classList.toggle("stale", !online);
+    card.querySelector(".cm").textContent = valid ? `${Math.round(v)} cm` : "--";
+    card.querySelector(".m").textContent = valid ? `${(v / 100).toFixed(2)} m` : " ";
+    if (close) alerts.push(`Obstacle ${s.label}: ${(v / 100).toFixed(2)} m`);
+  }
+  if (alerts.length) {
+    el.banner.innerHTML = `<div class="banner-inner">${WARN_ICON}<div class="rows">` +
+      alerts.map((a) => `<div>${a}</div>`).join("") +
+      (online ? "" : "<small>Last known reading - ESP32 offline</small>") + "</div></div>";
+    el.banner.hidden = false;
+  } else {
+    el.banner.hidden = true;
+  }
+
+  el.userEmail.textContent = S.user.email || "";
+}
+
+// ============================================================================
+//  Periodic checks (online/offline + website-side safety)
+// ============================================================================
+function tick() {
+  const prev = S.online;
+  S.online = computeOnline();
+  if (prev !== S.online && S.online !== null) console.info("[boat] ESP32", S.online ? "online" : "offline");
+
+  // Website-side safety: if the ESP32 is offline, make sure the boat will NOT
+  // resume by itself when it reconnects.
+  if (S.online === false && S.control &&
+      (S.control.started || S.control.conveyor || S.control.command !== "stop")) {
+    writeStop("ESP32 offline");
+  }
+  updateWakeLock();
+  render();
+}
+
+async function updateWakeLock() {
+  // Keep the screen on while armed: a sleeping phone stops the heartbeat
+  // and the boat would stop after 5 s.
+  const want = !!(S.user && S.control && (S.control.started || S.control.conveyor));
+  try {
+    if (want && !wakeLock && "wakeLock" in navigator && document.visibilityState === "visible") {
+      wakeLock = await navigator.wakeLock.request("screen");
+      wakeLock.addEventListener("release", () => { wakeLock = null; });
+    } else if (!want && wakeLock) {
+      await wakeLock.release();
+      wakeLock = null;
+    }
+  } catch (_) { wakeLock = null; }
+}
+
+// ============================================================================
+//  Firebase setup
+// ============================================================================
+function attachListeners() {
+  const { db, ref, onValue } = fb;
+  const on = (path, cb) => {
+    const unsub = onValue(ref(db, path), (snap) => { cb(snap.val()); render(); },
+      (err) => { toast(`Read error on ${path}: ${err.code || err.message}`); });
+    listeners.push(unsub);
+  };
+  on(".info/connected", (v) => { S.fbConnected = v === true; });
+  on(".info/serverTimeOffset", (v) => { S.offset = typeof v === "number" ? v : 0; });
+  on(PATHS.control, (v) => { S.control = v || { started: false, command: "stop", conveyor: false }; });
+  on(PATHS.status, (v) => {
+    S.statusLoaded = true;
+    S.lastSeen = v && typeof v.lastSeen === "number" ? v.lastSeen : null;
+    S.relays = v && v.relays ? v.relays : null;
+    S.online = computeOnline();
+  });
+  on(PATHS.sensors, (v) => { S.sensors = v || null; });
+}
+
+function detachListeners() {
+  listeners.forEach((u) => { try { u(); } catch (_) {} });
+  listeners = [];
+  Object.assign(S, { fbConnected: false, control: null, relays: null, lastSeen: null, statusLoaded: false, sensors: null, online: null });
+}
+
+async function initFirebase() {
+  S.configured = isConfigured(firebaseConfig);
+  if (!S.configured) {
+    el.setupNotice.hidden = false;
+    el.loginBtn.disabled = true;
+    el.loginError.textContent = "";
+    render();
+    return;
+  }
+  try {
+    const [appMod, authMod, dbMod] = await Promise.all([
+      import(SDK + "firebase-app.js"),
+      import(SDK + "firebase-auth.js"),
+      import(SDK + "firebase-database.js"),
+    ]);
+    const app = appMod.initializeApp(firebaseConfig);
+    const auth = authMod.getAuth(app);
+    const db = dbMod.getDatabase(app);
+    fb = {
+      app, auth, db,
+      ref: dbMod.ref, onValue: dbMod.onValue, update: dbMod.update, set: dbMod.set, increment: dbMod.increment,
+      signIn: authMod.signInWithEmailAndPassword, signOut: authMod.signOut,
+    };
+    authMod.onAuthStateChanged(auth, (user) => {
+      detachListeners();
+      S.user = user || null;
+      if (user) attachListeners();
+      render();
+    });
+  } catch (e) {
+    console.error(e);
+    el.sdkError.hidden = false;
+    el.sdkError.innerHTML = "<strong>Could not load Firebase</strong><p>Check this phone's internet connection, then reload the page.</p>";
+    el.loginBtn.disabled = true;
+    render();
+  }
+}
+
+// ============================================================================
+//  UI events
+// ============================================================================
+el.loginForm.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  if (!fb) return;
+  el.loginError.textContent = "";
+  el.loginBtn.disabled = true;
+  el.loginBtn.textContent = "LOGGING IN...";
+  try {
+    await fb.signIn(fb.auth, el.email.value.trim(), el.password.value);
+    el.password.value = "";
+  } catch (e) {
+    const msg = {
+      "auth/invalid-credential": "Wrong email or password.",
+      "auth/invalid-email": "That email address is not valid.",
+      "auth/user-disabled": "This account is disabled.",
+      "auth/too-many-requests": "Too many attempts. Wait a minute and try again.",
+      "auth/network-request-failed": "No internet connection.",
+    }[e.code] || (e.code || e.message);
+    el.loginError.textContent = msg;
+  } finally {
+    el.loginBtn.disabled = false;
+    el.loginBtn.textContent = "LOG IN";
+  }
+});
+
+el.startBtn.addEventListener("click", () => {
+  buzz();
+  if (S.control && S.control.started) {
+    writeControl({ started: false, command: "stop", conveyor: false }, "STOP SYSTEM");
+  } else {
+    if (S.online !== true) return;
+    writeControl({ started: true, command: "forward" }, "START");
+  }
+});
+
+for (const b of el.dirs) {
+  b.addEventListener("click", () => {
+    if (S.online !== true || !(S.control && S.control.started)) return;
+    buzz();
+    writeControl({ command: b.dataset.cmd }, CMD_NAMES[b.dataset.cmd]);
+  });
+}
+
+el.conveyorBtn.addEventListener("click", () => {
+  if (S.online !== true) return;
+  buzz();
+  const next = !(S.control && S.control.conveyor);
+  writeControl({ conveyor: next }, "CONVEYOR");
+});
+
+el.logoutBtn.addEventListener("click", async () => {
+  if (!fb) return;
+  // Stop the boat before giving up control.
+  if (S.control && (S.control.started || S.control.conveyor)) {
+    try { await fb.update(fb.ref(fb.db, PATHS.control), { started: false, command: "stop", conveyor: false }); } catch (_) {}
+  }
+  await fb.signOut(fb.auth);
+});
+
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") updateWakeLock(); });
+
+// ============================================================================
+//  Start
+// ============================================================================
+setInterval(tick, SETTINGS.TICK_MS);
+setInterval(sendHeartbeat, SETTINGS.HEARTBEAT_MS);
+render();
+initFirebase();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+id,net,from_part,from_pin,to_part,to_pin,wire_colour (CONNECTIONS.md),drawn_colour,gauge,section,variant,note,sheets
+W001,BAT+_UNFUSED,BT1,+,F1,1,Red,red,14 AWG,§3.1 §4 §5,main,F1 within 15 cm of battery +,2
+W002,BAT+,F1,2,U3,BAT+,Red,red,14 AWG,§3.1 §4 §5,main,,2
+W003,BAT-,BT1,-,U3,BAT-,Black,black,14 AWG,§3.1 §5,main,Battery − goes ONLY to BAT−; no wire to GND bus (§9),2
+W004,PV+,PV1,+,U3,PV+,Red,red,18 AWG,§3.1,main,,2
+W005,PV-,PV1,-,U3,PV-,Black,black,18 AWG,§3.1,main,,2
+W006,LOAD+,U3,LOAD+,SW1,1,Red,red,14 AWG,§3.1 §4,main,"Switch is on the LOAD line, not the battery line",2
+W007,+12V_BUS,SW1,2,TB1,+,Red,red,14 AWG,§4,main,,2
+W008,GND_BUS,U3,LOAD-,TB2,GND,Black,black,14 AWG,§3.1 §9,main,,2
+W009,+12V_BUS,TB1,+,K1,DC+,Red,red,20–22 AWG,§6.1,main,,2 3 5
+W010,GND_BUS,TB2,GND,K1,DC-,Black,black,20–22 AWG,§6.1 §9,main,,2 3 5
+W011,K1_IN,U1,GPIO26,K1,IN,Yellow,yellow,22–24 AWG,§6.1 §2.2 §2.3,main,,3 4
+W012,K1_IN,K1,IN,R1,1,— (resistor lead),yellow,component lead,§6.1,main,"10 kΩ pull-down, soldered at the module IN / DC− terminals",3
+W013,GND_BUS,R1,2,K1,DC-,— (resistor lead),black,component lead,§6.1 §9,main,§6.1 table says 'to ground bus'; §6.1 text says solder at the IN/DC− terminals (DC− is on the bus),3
+W014,+12V_BUS,TB1,+,K1,COM,Red,red,16–18 AWG,§6.2,main,,2 3
+W015,M1+,K1,NO,M1,+,Red,red,16–18 AWG,§6.2,main,,3
+W016,GND_BUS,M1,-,TB2,GND,Black,black,16–18 AWG,§6.2 §9,main,,2 3
+W017,M1+,D1,K,M1,+,— (diode lead),red,component lead,§6.2,main,Band (cathode) on motor + / NO wire; solder at the motor,3
+W018,GND_BUS,D1,A,M1,-,— (diode lead),black,component lead,§6.2,main,Plain end (anode) on motor − / GND,3
+W019,M1+,C1,1,M1,+,— (capacitor lead),red,component lead,§6.2,main,"Optional, no polarity; solder at the motor",3
+W020,GND_BUS,C1,2,M1,-,— (capacitor lead),black,component lead,§6.2,main,"Optional, no polarity; solder at the motor",3
+W021,NC,K1,NC,(not connected),,—,black,—,§6.2,main,NC not connected (never use NC),3
+W022,+12V_BUS,TB1,+,K2,DC+,Red,red,20–22 AWG,§6.1,main,,2 3 5
+W023,GND_BUS,TB2,GND,K2,DC-,Black,black,20–22 AWG,§6.1 §9,main,,2 3 5
+W024,K2_IN,U1,GPIO27,K2,IN,Yellow,yellow,22–24 AWG,§6.1 §2.2 §2.3,main,,3 4
+W025,K2_IN,K2,IN,R2,1,— (resistor lead),yellow,component lead,§6.1,main,"10 kΩ pull-down, soldered at the module IN / DC− terminals",3
+W026,GND_BUS,R2,2,K2,DC-,— (resistor lead),black,component lead,§6.1 §9,main,§6.1 table says 'to ground bus'; §6.1 text says solder at the IN/DC− terminals (DC− is on the bus),3
+W027,+12V_BUS,TB1,+,K2,COM,Red,red,16–18 AWG,§6.2,main,,2 3
+W028,M2+,K2,NO,M2,+,Red,red,16–18 AWG,§6.2,main,,3
+W029,GND_BUS,M2,-,TB2,GND,Black,black,16–18 AWG,§6.2 §9,main,,2 3
+W030,M2+,D2,K,M2,+,— (diode lead),red,component lead,§6.2,main,Band (cathode) on motor + / NO wire; solder at the motor,3
+W031,GND_BUS,D2,A,M2,-,— (diode lead),black,component lead,§6.2,main,Plain end (anode) on motor − / GND,3
+W032,M2+,C2,1,M2,+,— (capacitor lead),red,component lead,§6.2,main,"Optional, no polarity; solder at the motor",3
+W033,GND_BUS,C2,2,M2,-,— (capacitor lead),black,component lead,§6.2,main,"Optional, no polarity; solder at the motor",3
+W034,NC,K2,NC,(not connected),,—,black,—,§6.2,main,NC not connected (never use NC),3
+W035,+12V_BUS,TB1,+,K3,DC+,Red,red,20–22 AWG,§6.1,main,,2 3 5
+W036,GND_BUS,TB2,GND,K3,DC-,Black,black,20–22 AWG,§6.1 §9,main,,2 3 5
+W037,K3_IN,U1,GPIO25,K3,IN,Yellow,yellow,22–24 AWG,§6.1 §2.2 §2.3,main,,3 4
+W038,K3_IN,K3,IN,R3,1,— (resistor lead),yellow,component lead,§6.1,main,"10 kΩ pull-down, soldered at the module IN / DC− terminals",3
+W039,GND_BUS,R3,2,K3,DC-,— (resistor lead),black,component lead,§6.1 §9,main,§6.1 table says 'to ground bus'; §6.1 text says solder at the IN/DC− terminals (DC− is on the bus),3
+W040,+12V_BUS,TB1,+,K3,COM,Red,red,16–18 AWG,§6.2,main,,2 3
+W041,M3+,K3,NO,M3,+,Red,red,16–18 AWG,§6.2,main,,3
+W042,GND_BUS,M3,-,TB2,GND,Black,black,16–18 AWG,§6.2 §9,main,,2 3
+W043,M3+,D3,K,M3,+,— (diode lead),red,component lead,§6.2,main,Band (cathode) on motor + / NO wire; solder at the motor,3
+W044,GND_BUS,D3,A,M3,-,— (diode lead),black,component lead,§6.2,main,Plain end (anode) on motor − / GND,3
+W045,M3+,C3,1,M3,+,— (capacitor lead),red,component lead,§6.2,main,"Optional, no polarity; solder at the motor",3
+W046,GND_BUS,C3,2,M3,-,— (capacitor lead),black,component lead,§6.2,main,"Optional, no polarity; solder at the motor",3
+W047,NC,K3,NC,(not connected),,—,black,—,§6.2,main,NC not connected (never use NC),3
+W048,+12V_BUS,TB1,+,U2,IN+,Red,red,20–22 AWG,§7,main,,2
+W049,GND_BUS,TB2,GND,U2,IN-,Black,black,20–22 AWG,§7 §9,main,,2
+W050,+5V_UBEC,U2,5V,J1,1,Orange,orange,22 AWG,§7,main,Unpluggable link for USB programming,2
+W051,+5V,J1,2,U1,VIN,Orange,orange,22 AWG,§7 §2.3,main,VIN (sometimes labelled 5V); never 3V3,2 4
+W052,+5V,J1,2,S1,VCC,Orange,orange,22 AWG,§7 §8,main,,2 4
+W053,+5V,J1,2,S2,VCC,Orange,orange,22 AWG,§7 §8,main,,2 4
+W054,+5V,J1,2,S3,VCC,Orange,orange,22 AWG,§7 §8,main,,2 4
+W055,+5V,J1,2,S4,VCC,Orange,orange,22 AWG,§7 §8,main,,2 4
+W056,GND_BUS,U2,GND,TB2,GND,Black,black,22 AWG,§7 §9,main,,2
+W057,GND_BUS,U1,GND,TB2,GND,Black,black,22 AWG,§7 §9 §2.3,main,,2 4
+W058,GND_BUS,S1,GND,TB2,GND,Black,black,22 AWG,§7 §8 §9,main,,2 4
+W059,GND_BUS,S2,GND,TB2,GND,Black,black,22 AWG,§7 §8 §9,main,,2 4
+W060,GND_BUS,S3,GND,TB2,GND,Black,black,22 AWG,§7 §8 §9,main,,2 4
+W061,GND_BUS,S4,GND,TB2,GND,Black,black,22 AWG,§7 §8 §9,main,,2 4
+W062,TRIG1,U1,GPIO16,S1,TRIG,Green,green,22–24 AWG,§8 §2.2,main,"Direct, no divider",4
+W063,ECHO1_5V,S1,ECHO,R4,1,Blue,blue,22–24 AWG,§8,main,0 / 5 V side,4
+W064,ECHO1,R4,2,U1,GPIO34,Blue,blue,22–24 AWG,§8,main,0 / 3.33 V side,4
+W065,ECHO1,U1,GPIO34,R8,1,— (resistor lead),blue,component lead,§8,main,,4
+W066,GND_BUS,R8,2,TB2,GND,— (resistor lead),black,component lead,§8 §9,main,,2 4
+W067,TRIG2,U1,GPIO17,S2,TRIG,Green,green,22–24 AWG,§8 §2.2,main,"Direct, no divider",4
+W068,ECHO2_5V,S2,ECHO,R5,1,Blue,blue,22–24 AWG,§8,main,0 / 5 V side,4
+W069,ECHO2,R5,2,U1,GPIO35,Blue,blue,22–24 AWG,§8,main,0 / 3.33 V side,4
+W070,ECHO2,U1,GPIO35,R9,1,— (resistor lead),blue,component lead,§8,main,,4
+W071,GND_BUS,R9,2,TB2,GND,— (resistor lead),black,component lead,§8 §9,main,,2 4
+W072,TRIG3,U1,GPIO18,S3,TRIG,Green,green,22–24 AWG,§8 §2.2,main,"Direct, no divider",4
+W073,ECHO3_5V,S3,ECHO,R6,1,Blue,blue,22–24 AWG,§8,main,0 / 5 V side,4
+W074,ECHO3,R6,2,U1,GPIO36,Blue,blue,22–24 AWG,§8,main,0 / 3.33 V side,4
+W075,ECHO3,U1,GPIO36,R10,1,— (resistor lead),blue,component lead,§8,main,,4
+W076,GND_BUS,R10,2,TB2,GND,— (resistor lead),black,component lead,§8 §9,main,,2 4
+W077,TRIG4,U1,GPIO19,S4,TRIG,Green,green,22–24 AWG,§8 §2.2,main,"Direct, no divider",4
+W078,ECHO4_5V,S4,ECHO,R7,1,Blue,blue,22–24 AWG,§8,main,0 / 5 V side,4
+W079,ECHO4,R7,2,U1,GPIO39,Blue,blue,22–24 AWG,§8,main,0 / 3.33 V side,4
+W080,ECHO4,U1,GPIO39,R11,1,— (resistor lead),blue,component lead,§8,main,,4
+W081,GND_BUS,R11,2,TB2,GND,— (resistor lead),black,component lead,§8 §9,main,,2 4
+W082,FB1_GPIO,U1,GPIO26,R12,1,"Yellow (relay signal, §1)",yellow,22–24 AWG,§6.4,fallback,,5
+W083,FB1_BASE,R12,2,Q1,B,— (resistor lead),yellow,component lead,§6.4,fallback,,5
+W084,FB1_GPIO,U1,GPIO26,R1,1,— (resistor lead),yellow,component lead,§6.4,fallback,10 kΩ pull-down moves from IN to the GPIO side,5
+W085,GND_BUS,R1,2,TB2,GND,— (resistor lead),black,component lead,§6.4,fallback,,5
+W086,FB1_IN,Q1,C,K1,IN,— (not specified),yellow,22–24 AWG,§6.4,fallback,,5
+W087,GND_BUS,Q1,E,TB2,GND,— (not specified),black,—,§6.4,fallback,,5
+W088,FB2_GPIO,U1,GPIO27,R13,1,"Yellow (relay signal, §1)",yellow,22–24 AWG,§6.4,fallback,,5
+W089,FB2_BASE,R13,2,Q2,B,— (resistor lead),yellow,component lead,§6.4,fallback,,5
+W090,FB2_GPIO,U1,GPIO27,R2,1,— (resistor lead),yellow,component lead,§6.4,fallback,10 kΩ pull-down moves from IN to the GPIO side,5
+W091,GND_BUS,R2,2,TB2,GND,— (resistor lead),black,component lead,§6.4,fallback,,5
+W092,FB2_IN,Q2,C,K2,IN,— (not specified),yellow,22–24 AWG,§6.4,fallback,,5
+W093,GND_BUS,Q2,E,TB2,GND,— (not specified),black,—,§6.4,fallback,,5
+W094,FB3_GPIO,U1,GPIO25,R14,1,"Yellow (relay signal, §1)",yellow,22–24 AWG,§6.4,fallback,,5
+W095,FB3_BASE,R14,2,Q3,B,— (resistor lead),yellow,component lead,§6.4,fallback,,5
+W096,FB3_GPIO,U1,GPIO25,R3,1,— (resistor lead),yellow,component lead,§6.4,fallback,10 kΩ pull-down moves from IN to the GPIO side,5
+W097,GND_BUS,R3,2,TB2,GND,— (resistor lead),black,component lead,§6.4,fallback,,5
+W098,FB3_IN,Q3,C,K3,IN,— (not specified),yellow,22–24 AWG,§6.4,fallback,,5
+W099,GND_BUS,Q3,E,TB2,GND,— (not specified),black,—,§6.4,fallback,,5
